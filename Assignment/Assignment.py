@@ -59,12 +59,12 @@ def remove_duplicate_words(sentence):
     :return:
     """
 
-
-test_sentence = 'THIS? is, A. DuMb Sentence'
-stop_word_test = 'is and'
-punctuation_test = ', . ?'
-print(proper_capitalization(test_sentence))
-print(tokenization(test_sentence))
-print(stop_word_removal(test_sentence, stop_word_test))
-print(remove_punc(test_sentence, punctuation_test))
+if __name__ == '__main__':
+    test_sentence = 'THIS? is, A. DuMb Sentence'
+    stop_word_test = 'is and'
+    punctuation_test = ', . ?'
+    print(proper_capitalization(test_sentence))
+    print(tokenization(test_sentence))
+    print(stop_word_removal(test_sentence, stop_word_test))
+    print(remove_punc(test_sentence, punctuation_test))
 
