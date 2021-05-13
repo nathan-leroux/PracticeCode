@@ -1,0 +1,1 @@
+created_at,tweet_ID,text,screen_name,followers,friends,user_ID,valence_intensity,anger_intensity,fear_intensity,sadness_intensity,joy_intensity,sentiment_category,emotion_category,country_region
