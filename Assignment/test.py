@@ -1,5 +1,5 @@
 import unittest
-from Assignment import *
+from A2_22476883 import *
 
 
 class Tests(unittest.TestCase):
@@ -20,21 +20,15 @@ class Tests(unittest.TestCase):
         self.assertEqual(long_string, answer)
         self.assertEqual(stop_word_removal('this the and this is is the the', 'the and this is'), '')
 
-    def test_remove_punc(self):
-        self.assertEqual(remove_punc('This, is. a! test$', ', . ! $'), 'This is a test')
-
     def test_remove_duplicates(self):
         self.assertEqual(remove_duplicate_words('aww baby aww awwbaby damn cmon'), 'aww awwbaby baby cmon damn')
-
-    def test_clean_noise(self):
-        self.assertEqual(cleaning_noise('http httpANDONE #blessed @Habib yee yeet&ampskeet bigsend\n'),
-                         'yee yeet&skeet bigsend')
 
     def test_construct_ngram(self):
         expected_ngram = [['This', 'is', 'a'], ['is', 'a', 'long'], ['a', 'long', 'sentence']]
         result = construct_ngrams('This is a long sentence', 3)
         self.assertEqual(result, expected_ngram)
         self.assertEqual(construct_ngrams('smol test',3), [])
+        self.assertEqual(construct_ngrams('this is another long sentence for testing', 5), [['this', 'is', 'another', 'long', 'sentence', 'for'], ['is', 'another', 'long', 'sentence', 'for', 'testing']])
 
     def test_pos(self):
         self.assertEqual(pos('it\'s'), 'it')
@@ -44,10 +38,6 @@ class Tests(unittest.TestCase):
         self.assertEqual(pos('presses'), 'press')
         self.assertEqual(pos('cries'), 'cri')
         self.assertEqual(pos('tied'), 'tie')
-
-    def test_word_ranking(self):
-        fake_list = ['yes yes yes yes', 'no no no no yes', 'what what what que que ']
-        self.assertEqual(word_ranking(fake_list, 3), [('yes', 5), ('no', 4), ('what', 3)])
 
 
 

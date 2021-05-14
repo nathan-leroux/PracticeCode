@@ -18,7 +18,7 @@ def tokenization(sentence):
     """
     Function takes a sentence and returns a list of the words.
     """
-    result = re.split(' ', sentence)
+    result = sentence.split()
     return result
 
 
@@ -57,9 +57,16 @@ def remove_punc(sentence, punctuation):
     Function takes a sentence and a string of punctuation and removes that punctuation from
     the sentence.
     """
-    punctuation = tokenization(punctuation)
-    for symbol in punctuation:
-        sentence = sentence.replace(symbol, '')
+    sentence = tokenization(sentence)
+    for char in punctuation:
+        flag = False
+        while flag is False:
+            flag = True
+            for word in sentence:
+                if word.endswith(char):
+                    index = sentence.index(word)
+                    sentence[index] = word[0:-1]
+    ' '.join(sentence)
 
     return sentence
 
@@ -85,16 +92,20 @@ def cleaning_noise(sentence):
     """
     Takes a Sentence and removes all words not useful for text analysis
     """
-
     sentence = tokenization(sentence)
     sentence_copy = sentence.copy()
     undesirable = ['http', '@', '#']
-
-    for word in sentence_copy:
-        # removing words with undesirable characters/sequences
-        for char in undesirable:
+    count = 0
+    # removing words with undesirable characters/sequences
+    for char in undesirable:
+        for word in sentence_copy:
             if char in word:
-                sentence.remove(word)
+                if char == '@':
+                    count +=1
+                    if count % 2 == 1:
+                        sentence.remove(word)
+                else:
+                    sentence.remove(word)
 
     sentence = ' '.join(sentence)
      # removing newline char from words
@@ -131,32 +142,35 @@ def pos(sentence):
     Takes a sentence and stems words to thier basic forms, returns a string of stemmed words
     """
     sentence = tokenization(sentence)
-    for word in sentence:
-        index = sentence.index(word)
-        #removing ownerships
-        if re.search("\'s$|s\'$", word):
-            sentence[index] = re.sub("\'s$|s\'$", '', word)
-        #removing plurals
-        elif re.search("sses$", word):
-            sentence[index] = re.sub("sses$", 'ss', word)
-        elif len(word) > 4 and re.search("ies$", word):
-            sentence[index] = re.sub("ies$", 'i', word)
-        elif re.search("[aeiouyAEIOUY]", word) and re.search("s$", word) and not re.search("[aeiousy]s$", word):
-            sentence[index] = re.sub("s$", '', word)
-        #removing adjectives
-        elif re.search("er$", word):
-            sentence[index] = re.sub("er$", '', word)
-        #removing past tense
-        elif len(word) <= 4 and re.search("ied$", word):
-            sentence[index] = re.sub("ied$", 'ie', word)
-        elif re.search("ed$", word):
-            sentence[index] = re.sub("ed$", '', word)
-        #removing verbs
-        elif len(word) > 5 and re.search("ing$", word):
-            sentence[index] = re.sub("ing$", '', word)
-        #removing adverbs
-        elif re.search("ly$", word):
-            sentence[index] = re.sub("ly$", '', word)
+    count = 0
+    while count != 2:
+        count += 1
+        for word in sentence:
+            index = sentence.index(word)
+            #removing ownerships
+            if re.search("\'s$|s\'$", word):
+                sentence[index] = re.sub("\'s$|s\'$", '', word)
+            #removing plurals
+            elif re.search("sses$", word):
+                sentence[index] = re.sub("sses$", 'ss', word)
+            elif len(word) > 4 and re.search("ies$", word):
+                sentence[index] = re.sub("ies$", 'i', word)
+            elif re.search("[aeiouyAEIOUY]", word) and re.search("s$", word) and not re.search("[aeiousy]s$", word):
+                sentence[index] = re.sub("s$", '', word)
+            #removing adjectives
+            elif re.search("er$", word):
+                sentence[index] = re.sub("er$", '', word)
+            #removing past tense
+            elif len(word) <= 4 and re.search("ied$", word):
+                sentence[index] = re.sub("ied$", 'ie', word)
+            elif re.search("ed$", word):
+                sentence[index] = re.sub("ed$", '', word)
+            #removing verbs
+            elif len(word) > 5 and re.search("ing$", word):
+                sentence[index] = re.sub("ing$", '', word)
+            #removing adverbs
+            elif re.search("ly$", word):
+                sentence[index] = re.sub("ly$", '', word)
 
     result = ' '.join(sentence)
     return result
@@ -176,14 +190,10 @@ def tweet_analysis():
     Writes the results to file and returns them.
     """
     #Ask for user input
-    print('Enter the name of the file to read: ',end='')
-    input_file_name = input()
-    print('Enter the name of the file to write: ',end='')
-    output_file_name = input()
-    print('Enter your stopwords: ',end='')
-    stopwords = input()
-    print('Enter your punctuations to remove: ',end='')
-    punctuations = input()
+    input_file_name = input('Enter the name of the file to read: ')
+    output_file_name = input('Enter the name of the file to write: ')
+    stopwords = input('Enter your stopwords: ')
+    punctuations = input('Enter your punctuations to remove: ')
 
     #Call previous functions
     file_lines = load_data(input_file_name)
@@ -221,8 +231,7 @@ def word_ranking(corpus, n):
     #showing top n words
     result = []
 
-    for x in range(n):
-        x
+    while len(result) != n:
         max_value = 0
         for value in unique_words.values():
             if value > max_value:
@@ -231,11 +240,7 @@ def word_ranking(corpus, n):
             if value == max_value and max_value > 0:
                 result.append((key, value))
                 unique_words[key] = 0
+    result.sort()
     return result
-
-
-if __name__ == '__main__':
-    output = tweet_analysis()
-    print(f'word ranking{word_ranking(output, 3)}')
 
 
